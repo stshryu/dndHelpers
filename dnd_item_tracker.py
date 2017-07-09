@@ -22,7 +22,6 @@ class itemModel(object):
                 modifiers TEXT,
                 damage TEXT,
                 range TEXT,
-                attackBonus TEXT,
                 damageType TEXT,
                 properties TEXT,
                 price TEXT,
@@ -35,8 +34,8 @@ class itemModel(object):
 
     def add(self, weapon):
         self._db.cursor().execute('''
-            INSERT INTO weapons(name, weight, modifiers, damage, range, attackBonus, damageType, properties, price, rarity, description)
-            VALUES(:name, :weight, :modifiers, :damage, :range, :attackBonus, :damageType, :price, :rarity, :properties, :description)''', weapon)
+            INSERT INTO weapons(name, weight, modifiers, damage, range, damageType, properties, price, rarity, description)
+            VALUES(:name, :weight, :modifiers, :damage, :range, :damageType, :price, :rarity, :properties, :description)''', weapon)
 
         self._db.commit()
 
@@ -64,7 +63,7 @@ class itemModel(object):
         else:
             self._db.cursor().execute('''
                 UPDATE weapons SET name=:name, weight=:weight, modifiers=:modifiers, damage=:damage, range=:range,
-                attackBonus=:attackBonus, damageType=:damageType, price=:price, rarity=:rarity, properties=:properties, description=:description
+                damageType=:damageType, price=:price, rarity=:rarity, properties=:properties, description=:description
                 WHERE id=:id''', details)
 
             self._db.commit()
@@ -134,7 +133,6 @@ class ListView(Frame):
                 f.write('Weight: ' + item['weight'] + '\n')
                 f.write('Range: ' + item['range'] + '\n')
                 f.write('Modifiers: ' + item['modifiers'] + '\n')
-                f.write('Attack Bonus: ' + item['attackBonus'] + '\n')
                 f.write('Damage: ' + item['damage'] + '\n')
                 f.write('Damage Type: ' + item['damageType'] + '\n')
                 f.write('Rarity: ' + item['rarity'] + '\n')
@@ -175,7 +173,6 @@ class ContactView(Frame):
         layout.add_widget(Text("Modifiers:", "modifiers"))
         layout.add_widget(Text("Range:", "range"))
         layout.add_widget(Text("Damage:", "damage"))
-        layout.add_widget(Text("Attack Bonus:", "attackBonus"))
         layout.add_widget(Text("Damage Type:", "damageType"))
         layout.add_widget(Text("Price:", "price"))
         layout.add_widget(Text("Rarity:", "rarity"))
