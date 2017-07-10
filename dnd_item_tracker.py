@@ -23,9 +23,9 @@ class itemModel(object):
                 damage TEXT,
                 range TEXT,
                 damageType TEXT,
-                properties TEXT,
                 price TEXT,
                 rarity TEXT,
+                properties TEXT,
                 description TEXT
                 )
         ''')
@@ -34,7 +34,7 @@ class itemModel(object):
 
     def add(self, weapon):
         self._db.cursor().execute('''
-            INSERT INTO weapons(name, weight, modifiers, damage, range, damageType, properties, price, rarity, description)
+            INSERT INTO weapons(name, weight, modifiers, damage, range, damageType, price, rarity, properties, description)
             VALUES(:name, :weight, :modifiers, :damage, :range, :damageType, :price, :rarity, :properties, :description)''', weapon)
 
         self._db.commit()
@@ -45,7 +45,7 @@ class itemModel(object):
 
     def get_weapon(self, weapon_id):
         return self._db.cursor().execute(
-            "SELECT * FROM weapons where id=?", str(weapon_id)).fetchone()
+            "SELECT * FROM weapons where id=:id", {"id": weapon_id}).fetchone()
 
     def get_current_weapon(self):
         if self.current_id is None:
@@ -79,7 +79,7 @@ class ListView(Frame):
                                        screen.height * 2 // 3,
                                        screen.width * 2 // 3,
                                        on_load=self._reload_list,
-                                       hover_focus=True,
+                                       hover_focus=False,
                                        title="Item List")
 
         self._model = model
@@ -135,8 +135,8 @@ class ListView(Frame):
                 f.write('Modifiers: ' + item['modifiers'] + '\n')
                 f.write('Damage: ' + item['damage'] + '\n')
                 f.write('Damage Type: ' + item['damageType'] + '\n')
-                f.write('Rarity: ' + item['rarity'] + '\n')
                 f.write('Price: ' + item['price'] + '\n')
+                f.write('Rarity: ' + item['rarity'] + '\n')
                 f.write('Properties: ' + item['properties'] + '\n')
                 f.write('Description:\n| ' + item['description'].replace('  ', '\t').replace('\n', '\n| ') + '\n')
 
@@ -159,7 +159,7 @@ class ContactView(Frame):
         super(ContactView, self).__init__(screen,
                                           screen.height * 2 // 3,
                                           screen.width * 2 // 3,
-                                          hover_focus=True,
+                                          hover_focus=False,
                                           title="Item details",
                                           reduce_cpu=True)
         # Save off the model that accesses the contacts database.
