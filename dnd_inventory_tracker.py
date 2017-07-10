@@ -18,6 +18,7 @@ class itemModel(object):
                 id INTEGER PRIMARY KEY,
                 name TEXT,
                 price TEXT,
+                charges TEXT,
                 quantity TEXT
                 )
         ''')
@@ -26,8 +27,8 @@ class itemModel(object):
 
     def add(self, item):
         self._db.cursor().execute('''
-            INSERT INTO inventory(name, price, quantity)
-            VALUES(:name, :price, :quantity)''', item)
+            INSERT INTO inventory(name, price, charges, quantity)
+            VALUES(:name, :price, :charges, :quantity)''', item)
 
         self._db.commit()
 
@@ -64,7 +65,7 @@ class itemModel(object):
             self.add(details)
         else:
             self._db.cursor().execute('''
-                UPDATE inventory SET name=:name, price=:price, quantity=:quantity
+                UPDATE inventory SET name=:name, price=:price, charges=:charges, quantity=:quantity
                 WHERE id=:id''', details)
 
             self._db.commit()
@@ -80,7 +81,7 @@ class ListView(Frame):
                                        screen.height * 2 // 3,
                                        screen.width * 2 // 3,
                                        on_load=self._reload_list,
-                                       hover_focus=True,
+                                       hover_focus=False,
                                        title="Inventory")
         self._model = model
 
@@ -155,7 +156,7 @@ class ContactView(Frame):
         super(ContactView, self).__init__(screen,
                                           screen.height * 2 // 3,
                                           screen.width * 2 // 3,
-                                          hover_focus=True,
+                                          hover_focus=False,
                                           title="Item Details",
                                           reduce_cpu=True)
         # Save off the model that accesses the contacts database.
@@ -166,6 +167,7 @@ class ContactView(Frame):
         self.add_layout(layout)
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Price:", "price"))
+        layout.add_widget(Text("Charges:","charges"))
         layout.add_widget(Text("Quantity:", "quantity"))
         layout2 = Layout([1, 1, 1, 1])
         self.add_layout(layout2)
